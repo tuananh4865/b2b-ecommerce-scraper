@@ -67,5 +67,23 @@ class TestB2BDataScraper(unittest.TestCase):
         sheet = wb.active
         self.assertGreater(sheet.max_row, 1, "Excel sheet should have data rows")
 
+    def test_parse_utf8_curly_apostrophe(self):
+        """Verify curly apostrophes and UTF-8 characters are preserved without mojibake."""
+        html = """
+        <article class="product_pod">
+            <h3><a href="test.html" title="Worlds Elsewhere: Journeys Around Shakespeare’s Globe">Shakespeare’s Globe</a></h3>
+            <div class="product_price">
+                <p class="price_color">£40.00</p>
+                <p class="instock availability"><i class="icon-ok"></i> In stock</p>
+            </div>
+        </article>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        article = soup.find("article")
+        parsed = self.scraper.parse_product_item(article, "http://books.toscrape.com/index.html")
+        self.assertIsNotNone(parsed)
+        self.assertIn("’", parsed["Tên sản phẩm"])
+        self.assertNotIn("â€", parsed["Tên sản phẩm"])
+
 if __name__ == "__main__":
     unittest.main()

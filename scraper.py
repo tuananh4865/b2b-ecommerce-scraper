@@ -89,6 +89,7 @@ class B2BDataScraper:
                 response = self.session.get(url, headers=headers, timeout=12)
 
                 if response.status_code == 200:
+                    response.encoding = "utf-8"
                     return response.text
                 elif response.status_code in (429, 500, 502, 503, 504):
                     wait_time = (2 ** attempt) + random.uniform(0.5, 1.5)
