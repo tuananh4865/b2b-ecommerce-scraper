@@ -45,7 +45,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Run automated tests
-pytest tests/ -v
+python -m pytest tests/ -v
 
 # 4. Run the scraper demo (crawls 2 sample pages)
 python scraper.py --pages 2 --csv output.csv --excel output.xlsx
